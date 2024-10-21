@@ -1,11 +1,15 @@
+from dotenv import load_dotenv
+import os
 import gradio as gr
 import requests
 import io
 
 from PIL import Image
 
+load_dotenv()
+
 API_URL = "https://api-inference.huggingface.co/models/sd-community/sdxl-flash"
-headers = {"Authorization": "Bearer " + "brother"}
+headers = {"Authorization": "Bearer " + os.getenv("HUGGINGFACE_TOKEN")}
 
 
 def query(payload):
