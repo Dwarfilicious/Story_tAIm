@@ -47,7 +47,6 @@ def chatbot_response(message):
         stream=False,  # Set to False to get the complete response
     )
 
-    print(type(response))
     # The response should be a single string now
     content = response.choices[0].message.content
     return content
@@ -61,11 +60,6 @@ with gr.Blocks() as blocks:
     chat_submit_btn = gr.Button("Send")
     chat_submit_btn.click(fn=chatbot_response, inputs=chat_input, outputs=chat_output)
 
-
-    prompt = gr.Textbox(label = "Prompt")
-    output = gr.Image(label = "Output Image")
-    submit_btn = gr.Button("Submit")
-    submit_btn.click(fn = generate_image, inputs=prompt, outputs=output)
     with gr.Row():
         with gr.Column(scale=3):
             prompt = gr.Textbox(label = "Prompt")
