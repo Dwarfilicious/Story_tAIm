@@ -6,6 +6,7 @@ import requests
 import io
 
 from PIL import Image
+from huggingface_hub import InferenceClient
 
 load_dotenv()
 
@@ -14,8 +15,9 @@ API_URL_AUDIO = "https://api-inference.huggingface.co/models/facebook/musicgen-s
 
 headers = {"Authorization": "Bearer " + os.getenv("HUGGINGFACE_TOKEN")}
 
-
-
+   
+    
+client = InferenceClient(api_key=os.getenv("HUGGINGFACE_TOKEN"))
 
 def query(payload, api_url):
     response = requests.post(api_url, headers = headers, json = payload)
@@ -38,19 +40,32 @@ def generate_audio(prompt):
     #audio = AudioSegment.from_file(io.BytesIO(audio_bytes), format="mp3")  # e.g., "mp3", "wav", etc.
     return audio_bytes
 
+
+def chatbot_response(message):
+    # Make the request to the model
+    response = client.chat_completion(
+        model="meta-llama/Meta-Llama-3-8B-Instruct",
+        messages=[{"role": "user", "content": message}],
+        max_tokens=500,
+        stream=False,  # Set to False to get the complete response
+    )
+    
+    print(type(response))
+    # The response should be a single string now
+    content = response.choices[0].message.content
+    return content
 #gradio interface
 
-demo = gr.Interface(
-    fn = generate_image,
-    inputs = "text",
-    outputs = "image",
-
-    # Descriptive Stuff
-    title = "DnD Companion",
-    description = "Start your adventure by providing a promt that describes a scene in your world"
-)
 
 with gr.Blocks() as blocks:
+    
+    gr.Markdown("## Chatbot")
+    chat_input = gr.Textbox(label="Type your message")
+    chat_output = gr.Textbox(label="Response", interactive=False)
+    chat_submit_btn = gr.Button("Send")
+    chat_submit_btn.click(fn=chatbot_response, inputs=chat_input, outputs=chat_output)
+
+
     prompt = gr.Textbox(label = "Prompt")
     output = gr.Image(label = "Output Image")
     submit_btn = gr.Button("Submit")
