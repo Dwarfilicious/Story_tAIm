@@ -8,7 +8,7 @@ from PIL import Image
 
 load_dotenv()
 
-API_URL = "https://api-inference.huggingface.co/models/sd-community/sdxl-flash"
+API_URL = "https://api-inference.huggingface.co/models/stable-diffusion-v1-5/stable-diffusion-v1-5"
 headers = {"Authorization": "Bearer " + os.getenv("HUGGINGFACE_TOKEN")}
 
 
@@ -21,8 +21,10 @@ def query(payload):
 
     return response.content
 
-def generate_image(prompt):
-    image_bytes = query({"inputs": prompt})
+def generate_image(prompt, neg_prompt):
+    payload = {"inputs": prompt, "parameters": {"negative_prompt": neg_prompt}, "seed":-1, "scheduler": "Euler a"}
+    print(payload)
+    image_bytes = query(payload)
 
     image = Image.open(io.BytesIO(image_bytes))
     return image
@@ -40,9 +42,16 @@ demo = gr.Interface(
 )
 
 with gr.Blocks() as blocks:
-    prompt = gr.Textbox(label = "Prompt")
-    output = gr.Image(label = "Output Image")
-    submit_btn = gr.Button("Submit")
-    submit_btn.click(fn = generate_image, inputs=prompt, outputs=output)
+    with gr.Row():
+        with gr.Column(scale=3):
+            prompt = gr.Textbox(label = "Prompt")
+            neg_prompt = gr.Textbox(label="Negative Prompt")
 
-blocks.launch(share = True)
+        submit_btn = gr.Button("Submit")
+
+    output = gr.Image(label = "Output Image", scale=0, height=512, width=512)
+
+    submit_btn.click(fn = generate_image, inputs=[prompt, neg_prompt], outputs=output)
+
+if __name__ == "__main__":
+    blocks.launch(share=False)
