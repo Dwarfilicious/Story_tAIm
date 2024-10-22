@@ -32,7 +32,17 @@ def generate_image(prompt):
 demo = gr.Interface(
     fn = generate_image,
     inputs = "text",
-    outputs = "image"
+    outputs = "image",
+
+    # Descriptive Stuff
+    title = "DnD Companion",
+    description = "Start your adventure by providing a promt that describes a scene in your world"
 )
 
-demo.launch(share = True)
+with gr.Blocks() as blocks:
+    prompt = gr.Textbox(label = "Prompt")
+    output = gr.Image(label = "Output Image")
+    submit_btn = gr.Button("Submit")
+    submit_btn.click(fn = generate_image, inputs=prompt, outputs=output)
+
+blocks.launch(share = True)
