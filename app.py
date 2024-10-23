@@ -13,6 +13,8 @@ API_URL_IMAGE = "https://api-inference.huggingface.co/models/stable-diffusion-v1
 API_URL_AUDIO = "https://api-inference.huggingface.co/models/facebook/musicgen-small"
 API_URL_TOSPEECH = "https://api-inference.huggingface.co/models/facebook/mms-tts-eng"
 
+RESPONSE = False
+
 headers = {"Authorization": "Bearer " + os.getenv("HUGGINGFACE_TOKEN")}
 
 client = InferenceClient(api_key=os.getenv("HUGGINGFACE_TOKEN"))
@@ -53,7 +55,8 @@ def chatbot_response(message):
 
     # The response should be a single string now
     content = response.choices[0].message.content
-    return content
+
+    return content, gr.Button("Narrate", interactive=True)
 #gradio interface
 
 
@@ -62,11 +65,14 @@ with gr.Blocks() as blocks:
     chat_input = gr.Textbox(label="Type your message")
     chat_output = gr.Textbox(label="Response", interactive=False)
     chat_submit_btn = gr.Button("Send")
-    chat_submit_btn.click(fn=chatbot_response, inputs=chat_input, outputs=chat_output)
-    
+
     speech_output = gr.Audio(label="Output Audio")
-    speech_submit_btn = gr.Button("Narrate")
+    speech_submit_btn = gr.Button("Narrate", interactive=False)
+
+    chat_submit_btn.click(fn=chatbot_response, inputs=chat_input, outputs=[chat_output, speech_submit_btn])
+    
     speech_submit_btn.click(fn = generate_speech, inputs=chat_output, outputs=speech_output)
+    
 
     with gr.Row():
         with gr.Column(scale=3):
