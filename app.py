@@ -66,7 +66,7 @@ with gr.Blocks() as blocks:
     chat_output = gr.Textbox(label="Response", interactive=False)
     chat_submit_btn = gr.Button("Send")
 
-    speech_output = gr.Audio(label="Output Audio")
+    speech_output = gr.Audio(label="Response Audio")
     speech_submit_btn = gr.Button("Narrate", interactive=False)
 
     chat_submit_btn.click(fn=chatbot_response, inputs=chat_input, outputs=[chat_output, speech_submit_btn])
@@ -85,9 +85,9 @@ with gr.Blocks() as blocks:
 
     submit_btn.click(fn = generate_image, inputs=[prompt, neg_prompt], outputs=output)
 
-    audio_prompt = gr.Textbox(label ="Audio Prompt")
-    audio_output = gr.Audio(label="Output Audio")
-    audio_submit_btn = gr.Button("Submit Audio Prompt")
+    audio_prompt = gr.Textbox(label ="Music Prompt")
+    audio_output = gr.Audio(label="Output Music")
+    audio_submit_btn = gr.Button("Submit Music Prompt")
     audio_submit_btn.click(fn = generate_audio, inputs=audio_prompt, outputs=audio_output)
     
 
