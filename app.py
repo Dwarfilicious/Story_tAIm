@@ -61,6 +61,7 @@ def chatbot_response(message):
 
 with gr.Blocks() as blocks:
     gr.Markdown("## Chatbot")
+    gr.Markdown("Can be used to generate a story. For example, \"Tell me a story about a flying panda.\"\nAfter text is generated, you can click on the 'Narrate' button to listen to the generated text.")
     chat_input = gr.Textbox(label="Type your message")
     chat_output = gr.Textbox(label="Response", interactive=False)
     chat_submit_btn = gr.Button("Send")
@@ -72,7 +73,8 @@ with gr.Blocks() as blocks:
 
     speech_submit_btn.click(fn = generate_speech, inputs=chat_output, outputs=speech_output)
 
-
+    gr.Markdown("## Image Generation")
+    gr.Markdown("Generates an image based on the prompt. For example, \"A cat in a forest\".\nThe negative prompt can be used to make the model omit certain features.")
     with gr.Row():
         with gr.Column(scale=3):
             prompt = gr.Textbox(label = "Prompt")
@@ -84,6 +86,8 @@ with gr.Blocks() as blocks:
 
     submit_btn.click(fn = generate_image, inputs=[prompt, neg_prompt], outputs=output)
 
+    gr.Markdown("## Music Generation")
+    gr.Markdown("Generates music based on the prompt. For example, \"A happy tune\".")
     audio_prompt = gr.Textbox(label ="Music Prompt")
     audio_output = gr.Audio(label="Output Music")
     audio_submit_btn = gr.Button("Submit Music Prompt")
