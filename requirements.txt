@@ -1,4 +1,7 @@
 gradio==3.41.2
 python-dotenv
 requests
+pillow
 huggingface_hub
+
+transformers==4.30.2
