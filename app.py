@@ -57,7 +57,6 @@ def chatbot_response(message):
     content = response.choices[0].message.content
 
     return content, gr.Button("Narrate", interactive=True)
-#gradio interface
 
 
 with gr.Blocks() as blocks:
@@ -70,9 +69,9 @@ with gr.Blocks() as blocks:
     speech_submit_btn = gr.Button("Narrate", interactive=False)
 
     chat_submit_btn.click(fn=chatbot_response, inputs=chat_input, outputs=[chat_output, speech_submit_btn])
-    
+
     speech_submit_btn.click(fn = generate_speech, inputs=chat_output, outputs=speech_output)
-    
+
 
     with gr.Row():
         with gr.Column(scale=3):
@@ -89,7 +88,7 @@ with gr.Blocks() as blocks:
     audio_output = gr.Audio(label="Output Music")
     audio_submit_btn = gr.Button("Submit Music Prompt")
     audio_submit_btn.click(fn = generate_audio, inputs=audio_prompt, outputs=audio_output)
-    
+
 
 if __name__ == "__main__":
     blocks.launch(share=False)
