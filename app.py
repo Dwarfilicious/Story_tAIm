@@ -11,6 +11,9 @@ load_dotenv()
 
 API_URL_IMAGE = "https://api-inference.huggingface.co/models/stable-diffusion-v1-5/stable-diffusion-v1-5"
 API_URL_AUDIO = "https://api-inference.huggingface.co/models/facebook/musicgen-small"
+API_URL_TOSPEECH = "https://api-inference.huggingface.co/models/facebook/mms-tts-eng"
+
+RESPONSE = False
 
 headers = {"Authorization": "Bearer " + os.getenv("HUGGINGFACE_TOKEN")}
 
@@ -37,6 +40,9 @@ def generate_audio(prompt):
     #audio = AudioSegment.from_file(io.BytesIO(audio_bytes), format="mp3")  # e.g., "mp3", "wav", etc.
     return audio_bytes
 
+def generate_speech(prompt):
+    speech_bytes = query({"inputs": prompt}, API_URL_TOSPEECH)
+    return speech_bytes
 
 def chatbot_response(message):
     # Make the request to the model
@@ -49,7 +55,8 @@ def chatbot_response(message):
 
     # The response should be a single string now
     content = response.choices[0].message.content
-    return content
+
+    return content, gr.Button("Narrate", interactive=True)
 #gradio interface
 
 
@@ -58,7 +65,14 @@ with gr.Blocks() as blocks:
     chat_input = gr.Textbox(label="Type your message")
     chat_output = gr.Textbox(label="Response", interactive=False)
     chat_submit_btn = gr.Button("Send")
-    chat_submit_btn.click(fn=chatbot_response, inputs=chat_input, outputs=chat_output)
+
+    speech_output = gr.Audio(label="Response Audio")
+    speech_submit_btn = gr.Button("Narrate", interactive=False)
+
+    chat_submit_btn.click(fn=chatbot_response, inputs=chat_input, outputs=[chat_output, speech_submit_btn])
+    
+    speech_submit_btn.click(fn = generate_speech, inputs=chat_output, outputs=speech_output)
+    
 
     with gr.Row():
         with gr.Column(scale=3):
@@ -71,10 +85,11 @@ with gr.Blocks() as blocks:
 
     submit_btn.click(fn = generate_image, inputs=[prompt, neg_prompt], outputs=output)
 
-    audio_prompt = gr.Textbox(label ="Audio Prompt")
-    audio_output = gr.Audio(label="Output Audio")
-    audio_submit_btn = gr.Button("Submit Audio Prompt")
+    audio_prompt = gr.Textbox(label ="Music Prompt")
+    audio_output = gr.Audio(label="Output Music")
+    audio_submit_btn = gr.Button("Submit Music Prompt")
     audio_submit_btn.click(fn = generate_audio, inputs=audio_prompt, outputs=audio_output)
+    
 
 if __name__ == "__main__":
     blocks.launch(share=False)
