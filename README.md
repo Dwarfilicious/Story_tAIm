@@ -2,7 +2,7 @@
 # Story tAIm
 A web application that helps you bring stories to life! 
 
-This application uses the gradio frontend framework to integrate 4 AI models freely available on HuggingFace into one well-rounded story telling application. 
+This application uses the gradio frontend framework to integrate 4 AI models freely available on HuggingFace into one well-rounded and user friendly story telling application. 
 
 ## Requirements
 
