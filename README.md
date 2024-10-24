@@ -1,6 +1,7 @@
 
 # Story tAIm
-A web application that helps you bring stories to life! 
+
+*A web application that helps you bring stories to life!* 
 
 This application uses the gradio frontend framework to integrate four AI models (freely available on HuggingFace) into one well-rounded and user friendly story telling application. 
 
@@ -11,7 +12,7 @@ Furthermore, the story telling experience may be enhanced by generating some bac
 The story (or text) is generated using `Llama-3-8B`[^1], a large language model which was developed using a transformer architecture. 
 This is then "read outloud" by using a text-to-speech model directly on the output of the language model, namely `
 mms-tts-eng `[^2].
-The images are generated from a list of positive and negative prompts using the `stable-diffusion-v1-5`[^3] model. 
+The images are generated from a list of positive and negative prompts using the `stable-diffusion-v1-5`[^3] text to image model, which as the name indicates is a diffusion based model. 
 Finally, for the music we used `MusicGen-small`[^4] which is also regressive model using a transformer architecture.
 
 [^1]: https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct
